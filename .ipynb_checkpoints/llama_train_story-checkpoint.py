@@ -42,6 +42,7 @@ def collate_fn(samples):
 
 
 def train():
+
     parser = argparse.ArgumentParser()
     # set hyperparameters
     parser.add_argument("--lora_r", type=float, default=8)
@@ -55,9 +56,7 @@ def train():
     train_dataset = TextDataset()
     tokenizer = LlamaTokenizer.from_pretrained("/data/llama2/", legacy=False)
     tokenizer.pad_token = tokenizer.unk_token
-    train_loader = DataLoader(
-        train_dataset, batch_size=1, shuffle=True, num_workers=0, collate_fn=collate_fn
-    )
+    train_loader = DataLoader(train_dataset, batch_size=1, shuffle=True, num_workers=0, collate_fn=collate_fn)
 
     # for longer timeouts
     kwargs = InitProcessGroupKwargs(timeout=timedelta(seconds=6000))
@@ -69,13 +68,7 @@ def train():
     accelerator.wait_for_everyone()
 
     # peft configuration
-    peft_config = LoraConfig(
-        task_type=TaskType.CAUSAL_LM,
-        inference_mode=False,
-        r=args.lora_r,
-        lora_alpha=args.lora_alpha,
-        lora_dropout=args.lora_dropout,
-    )
+    peft_config = LoraConfig(task_type=TaskType.CAUSAL_LM, inference_mode=False, r=args.lora_r, lora_alpha=args.lora_alpha, lora_dropout=args.lora_dropout)
 
     seed = 42
     set_seed(seed)
@@ -90,9 +83,7 @@ def train():
         num_warmup_steps=0,
         num_training_steps=(len(train_loader) * num_epochs),
     )
-    model, train_loader, optimizer, lr_scheduler = accelerator.prepare(
-        model, train_loader, optimizer, lr_scheduler
-    )
+    model, train_loader, optimizer, lr_scheduler = accelerator.prepare(model, train_loader, optimizer, lr_scheduler)
 
     is_ds_zero_3 = False
     if getattr(accelerator.state, "deepspeed_plugin", None):
@@ -118,14 +109,7 @@ def train():
         # vessl logging
         if accelerator.is_main_process:
             train_epoch_loss = total_loss / len(train_loader)
-            vessl.log(
-                step=epoch,
-                payload={
-                    "loss": train_epoch_loss,
-                    "ppl": train_ppl,
-                    "learning_rate": lr,
-                },
-            )
+            vessl.log(step=epoch, payload={"loss": train_epoch_loss, "ppl": train_ppl, "learning_rate": lr})
             accelerator.wait_for_everyone()
 
         # evaluation
