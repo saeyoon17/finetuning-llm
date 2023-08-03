@@ -1,0 +1,5 @@
+accelerate
+peft
+tqdm
+datasets
+transformers
