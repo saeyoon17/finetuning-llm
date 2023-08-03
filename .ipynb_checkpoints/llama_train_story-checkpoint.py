@@ -1,17 +1,17 @@
-import argparse
-# Custom Kwargs handler for increasing timeout
-from datetime import timedelta
-
 import torch
 import vessl
+import argparse
+from torch.utils.data import Dataset, DataLoader
 from accelerate import Accelerator
-from accelerate.utils import InitProcessGroupKwargs
+from tqdm import tqdm
 from datasets import load_from_disk
 from peft import LoraConfig, TaskType, get_peft_model
-from torch.utils.data import DataLoader, Dataset
-from tqdm import tqdm
-from transformers import (AutoModelForCausalLM, LlamaTokenizer,
-                          get_linear_schedule_with_warmup, set_seed)
+from transformers import AutoModelForCausalLM, LlamaTokenizer, get_linear_schedule_with_warmup, set_seed
+
+# Custom Kwargs handler for increasing timeout
+from datetime import timedelta
+from accelerate import Accelerator
+from accelerate.utils import InitProcessGroupKwargs
 
 
 # Custom Dataset for VESSL Docs
@@ -21,7 +21,7 @@ class TextDataset(Dataset):
     """
 
     def __init__(self):
-        self.data = load_from_disk("/data/sy_story_tok_2048")
+        self.data = load_from_disk("/data/tolkien-story/")
         self.processed = []
         for e in self.data["train"]["input_ids"]:
             inst = {"input_ids": e, "labels": e}
@@ -54,7 +54,7 @@ def train():
     args = parser.parse_args()
 
     train_dataset = TextDataset()
-    tokenizer = LlamaTokenizer.from_pretrained("/data/llama2/", legacy=False)
+    tokenizer = LlamaTokenizer.from_pretrained("/data/llama2-7b-hf/", legacy=False)
     tokenizer.pad_token = tokenizer.unk_token
     train_loader = DataLoader(train_dataset, batch_size=1, shuffle=True, num_workers=0, collate_fn=collate_fn)
 
@@ -73,7 +73,7 @@ def train():
     seed = 42
     set_seed(seed)
 
-    model = AutoModelForCausalLM.from_pretrained("/root/llama2/")
+    model = AutoModelForCausalLM.from_pretrained("/data/llama2-7b-hf/")
     model = get_peft_model(model, peft_config)
     model.print_trainable_parameters()
 
