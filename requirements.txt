@@ -4,3 +4,4 @@ tqdm
 datasets
 transformers
 deepspeed
+sentencepiece
