@@ -81,7 +81,7 @@ def train():
     lr_scheduler = get_linear_schedule_with_warmup(
         optimizer=optimizer,
         num_warmup_steps=0,
-        num_training_steps=(len(train_loader) * num_epochs),
+        num_training_steps=(len(train_loader) * args.num_epoch),
     )
     model, train_loader, optimizer, lr_scheduler = accelerator.prepare(model, train_loader, optimizer, lr_scheduler)
 
