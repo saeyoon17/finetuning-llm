@@ -49,7 +49,7 @@ def train():
     parser.add_argument("--lora_alpha", type=int, default=32)
     parser.add_argument("--lora_dropout", type=float, default=0.05)
     parser.add_argument("--lr", type=float, default=2e-4)
-    parser.add_argument("--num_epoch", type=int, default=100)
+    parser.add_argument("--num_epoch", type=int, default=10)
     parser.add_argument("--save_interval", type=int, default=5)
     args = parser.parse_args()
 
@@ -77,7 +77,7 @@ def train():
     model = get_peft_model(model, peft_config)
     model.print_trainable_parameters()
 
-    optimizer = torch.optim.AdamW(model.parameters(), lr=lr)
+    optimizer = torch.optim.AdamW(model.parameters(), lr=args.lr)
     lr_scheduler = get_linear_schedule_with_warmup(
         optimizer=optimizer,
         num_warmup_steps=0,
@@ -120,7 +120,7 @@ def train():
                 logging_str = f"{args.lora_r}_{args.lora_alpha}_{args.lora_dropout}_{args.lr}_{epoch}"
                 accelerator.wait_for_everyone()
                 unwrapped_model.save_pretrained(
-                    f"/data/ckpt/{logging_str}",
+                    f"/output/ckpt/{logging_str}",
                     is_main_process=accelerator.is_main_process,
                     save_function=accelerator.save,
                     state_dict=accelerator.get_state_dict(model),
