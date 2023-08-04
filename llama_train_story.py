@@ -54,7 +54,7 @@ def train():
     args = parser.parse_args()
 
     train_dataset = TextDataset()
-    tokenizer = LlamaTokenizer.from_pretrained("/data/llama2-7b-hf/", legacy=False)
+    tokenizer = LlamaTokenizer.from_pretrained("/data/llama-2-7b-hf/", legacy=False)
     tokenizer.pad_token = tokenizer.unk_token
     train_loader = DataLoader(train_dataset, batch_size=1, shuffle=True, num_workers=0, collate_fn=collate_fn)
 
@@ -73,7 +73,7 @@ def train():
     seed = 42
     set_seed(seed)
 
-    model = AutoModelForCausalLM.from_pretrained("/data/llama2-7b-hf/")
+    model = AutoModelForCausalLM.from_pretrained("/data/llama-2-7b-hf/")
     model = get_peft_model(model, peft_config)
     model.print_trainable_parameters()
 
