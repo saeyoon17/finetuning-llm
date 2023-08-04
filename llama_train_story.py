@@ -119,6 +119,8 @@ def train():
                 unwrapped_model = accelerator.unwrap_model(model)
                 logging_str = f"{args.lora_r}_{args.lora_alpha}_{args.lora_dropout}_{args.lr}_{epoch}"
                 accelerator.wait_for_everyone()
+                import os
+                os.makedirs(f'/output/{logging_str}', exist_ok=True)
                 unwrapped_model.save_pretrained(
                     f"/output/{logging_str}",
                     is_main_process=accelerator.is_main_process,
