@@ -120,7 +120,7 @@ def train():
                 logging_str = f"{args.lora_r}_{args.lora_alpha}_{args.lora_dropout}_{args.lr}_{epoch}"
                 accelerator.wait_for_everyone()
                 unwrapped_model.save_pretrained(
-                    f"/output",
+                    f"./ckpts/{logging_str}",
                     is_main_process=accelerator.is_main_process,
                     save_function=accelerator.save,
                     state_dict=accelerator.get_state_dict(model),
