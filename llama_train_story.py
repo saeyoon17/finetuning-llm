@@ -46,7 +46,7 @@ def train():
     parser = argparse.ArgumentParser()
     # set hyperparameters
     parser.add_argument("--lora_r", type=float, default=8)
-    parser.add_argument("--lora_alpha", type=int, default=16)
+    parser.add_argument("--lora_alpha", type=int, default=32)
     parser.add_argument("--lora_dropout", type=float, default=0.05)
     parser.add_argument("--lr", type=float, default=2e-4)
     parser.add_argument("--num_epoch", type=int, default=10)
@@ -56,7 +56,7 @@ def train():
     train_dataset = TextDataset()
     tokenizer = LlamaTokenizer.from_pretrained("/data/llama-2-7b-hf/", legacy=False)
     tokenizer.pad_token = tokenizer.unk_token
-    train_loader = DataLoader(train_dataset, batch_size=1, shuffle=True, num_workers=0, collate_fn=collate_fn)
+    train_loader = DataLoader(train_dataset, batch_size=4, shuffle=True, num_workers=0, collate_fn=collate_fn)
 
     # for longer timeouts
     kwargs = InitProcessGroupKwargs(timeout=timedelta(seconds=6000))
@@ -68,6 +68,9 @@ def train():
     accelerator.wait_for_everyone()
 
     # peft configuration
+    print(f'lora_r: {args.lora_r}')
+    print(f'lora_alpha: {args.loar_alpha}')
+    print(f'lora_dropout: {args.lora_dropout}')
     peft_config = LoraConfig(task_type=TaskType.CAUSAL_LM, inference_mode=False, r=args.lora_r, lora_alpha=args.lora_alpha, lora_dropout=args.lora_dropout)
 
     seed = 42
@@ -110,7 +113,7 @@ def train():
         if accelerator.is_main_process:
             train_epoch_loss = total_loss / len(train_loader)
             vessl.log(step=epoch, payload={"loss": train_epoch_loss, "ppl": train_ppl, "learning_rate": lr})
-            accelerator.wait_for_everyone()
+        accelerator.wait_for_everyone()
 
         # evaluation
         if epoch % args.save_interval == 0:
