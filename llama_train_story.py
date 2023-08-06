@@ -46,7 +46,7 @@ def train():
     parser = argparse.ArgumentParser()
     # set hyperparameters
     parser.add_argument("--lora_r", type=float, default=8)
-    parser.add_argument("--lora_alpha", type=int, default=32)
+    parser.add_argument("--lora_alpha", type=int, default=8)
     parser.add_argument("--lora_dropout", type=float, default=0.05)
     parser.add_argument("--lr", type=float, default=2e-4)
     parser.add_argument("--num_epoch", type=int, default=10)
@@ -56,7 +56,7 @@ def train():
     train_dataset = TextDataset()
     tokenizer = LlamaTokenizer.from_pretrained("/data/llama-2-7b-hf/", legacy=False)
     tokenizer.pad_token = tokenizer.unk_token
-    train_loader = DataLoader(train_dataset, batch_size=4, shuffle=True, num_workers=0, collate_fn=collate_fn)
+    train_loader = DataLoader(train_dataset, batch_size=2, shuffle=True, num_workers=0, collate_fn=collate_fn)
 
     # for longer timeouts
     kwargs = InitProcessGroupKwargs(timeout=timedelta(seconds=6000))
