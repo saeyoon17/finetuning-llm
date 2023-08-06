@@ -69,7 +69,7 @@ def train():
 
     # peft configuration
     print(f'lora_r: {args.lora_r}')
-    print(f'lora_alpha: {args.loar_alpha}')
+    print(f'lora_alpha: {args.lora_alpha}')
     print(f'lora_dropout: {args.lora_dropout}')
     peft_config = LoraConfig(task_type=TaskType.CAUSAL_LM, inference_mode=False, r=args.lora_r, lora_alpha=args.lora_alpha, lora_dropout=args.lora_dropout)
 
