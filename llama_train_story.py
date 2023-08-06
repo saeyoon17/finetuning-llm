@@ -56,7 +56,7 @@ def train():
     train_dataset = TextDataset()
     tokenizer = LlamaTokenizer.from_pretrained("/data/llama-2-7b-hf/", legacy=False)
     tokenizer.pad_token = tokenizer.unk_token
-    train_loader = DataLoader(train_dataset, batch_size=2, shuffle=True, num_workers=0, collate_fn=collate_fn)
+    train_loader = DataLoader(train_dataset, batch_size=1, shuffle=True, num_workers=0, collate_fn=collate_fn)
 
     # for longer timeouts
     kwargs = InitProcessGroupKwargs(timeout=timedelta(seconds=6000))
