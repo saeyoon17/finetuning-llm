@@ -9,7 +9,7 @@ from tqdm import tqdm
 from transformers import LlamaForCausalLM, LlamaTokenizer
 from peft import LoraConfig, TaskType, get_peft_model
 
-peft_model_id = "/ckpts/"
+peft_model_id = "/ckpt/"
 max_memory = {0: "80GIB", 1: "80GIB", 2: "80GIB", 3: "80GIB", "cpu": "30GB"}
 config = PeftConfig.from_pretrained(peft_model_id)
 
