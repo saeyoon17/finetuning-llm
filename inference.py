@@ -23,4 +23,6 @@ tokenized = tokenizer("There was a hobbit named David.")
 tokenized["input_ids"] = torch.tensor(tokenized["input_ids"]).unsqueeze(0)
 tokenized["attention_mask"] = torch.ones(tokenized["input_ids"].size(1)).unsqueeze(0)
 outputs = model.generate(input_ids=tokenized["input_ids"], max_new_tokens=1024, attention_mask=tokenized["attention_mask"])
-print(tokenizer.batch_decode(outputs, skip_special_tokens=True)[0])
+result = tokenizer.batch_decode(outputs, skip_special_tokens=True)[0])
+with open('/output/out.txt', 'w') as f:
+    f.write(result)
