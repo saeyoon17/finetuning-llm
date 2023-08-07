@@ -10,7 +10,7 @@ from transformers import LlamaForCausalLM, LlamaTokenizer
 from peft import LoraConfig, TaskType, get_peft_model
 
 peft_model_id = "/ckpt/"
-max_memory = {0: "80GIB", 1: "80GIB", 2: "80GIB", 3: "80GIB", "cpu": "30GB"}
+max_memory = {0: "80GIB", 1: "80GIB", "cpu": "30GB"}
 config = PeftConfig.from_pretrained(peft_model_id)
 print(config.base_model_name_or_path)
 model = AutoModelForCausalLM.from_pretrained(config.base_model_name_or_path, device_map="auto", max_memory=max_memory, torch_dtype=torch.float16)
