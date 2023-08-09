@@ -37,7 +37,7 @@ class TextDataset(Dataset):
 def collate_fn(samples):
     inputs = torch.stack([torch.tensor(sample["input_ids"]) for sample in samples])
     labels = torch.stack([torch.tensor(sample["labels"]) for sample in samples])
-    atts = torch.stack([torch.ones(2048) for sample in samples])
+    atts = torch.stack([torch.ones(256) for sample in samples])
     return {"input_ids": inputs, "labels": labels, "attention_mask": atts}
 
 
@@ -45,7 +45,7 @@ def train():
 
     parser = argparse.ArgumentParser()
     # set hyperparameters
-    parser.add_argument("--lora_r", type=float, default=8)
+    parser.add_argument("--lora_r", type=float, default=4)
     parser.add_argument("--lora_alpha", type=int, default=8)
     parser.add_argument("--lora_dropout", type=float, default=0.05)
     parser.add_argument("--lr", type=float, default=2e-4)
