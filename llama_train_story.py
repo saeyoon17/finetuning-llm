@@ -49,8 +49,8 @@ def train():
     parser.add_argument("--lora_alpha", type=int, default=8)
     parser.add_argument("--lora_dropout", type=float, default=0.05)
     parser.add_argument("--lr", type=float, default=2e-4)
-    parser.add_argument("--num_epoch", type=int, default=50)
-    parser.add_argument("--save_interval", type=int, default=5)
+    parser.add_argument("--num_epoch", type=int, default=5)
+    parser.add_argument("--save_interval", type=int, default=1)
     args = parser.parse_args()
 
     train_dataset = TextDataset()
@@ -116,7 +116,7 @@ def train():
         accelerator.wait_for_everyone()
 
         # evaluation
-        if epoch % args.save_interval == 0:
+        if epoch % args.save_interval == 0 or epoch == args.num_epoch - 1:
             model.eval()
             with torch.no_grad():
                 unwrapped_model = accelerator.unwrap_model(model)
