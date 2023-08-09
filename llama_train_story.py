@@ -21,7 +21,7 @@ class TextDataset(Dataset):
     """
 
     def __init__(self):
-        self.data = load_from_disk("/data/tolkein_256")
+        self.data = load_from_disk("/data/tolkien_256")
         self.processed = []
         for e in self.data["train"]["input_ids"]:
             inst = {"input_ids": e, "labels": e}
